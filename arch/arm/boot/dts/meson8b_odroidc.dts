@@ -379,7 +379,7 @@
 
         vcck_dvfs {
             dvfs_id = <1>;
-            table_count = <12>;
+            table_count = <13>;
             change-frequent-only;
             /* NOTE: frequent in this table must be ascending order */
             /*             frequent(Khz)    min_uV      max_uV  */
@@ -393,8 +393,9 @@
                             816000          850000      850000
                            1008000          875000      875000
                            1200000          925000      925000
-                           1320000         1000000     1000000
-                           1488000         1075000     1075000 >;
+                           1320000         1100000     1100000
+                           1488000         1100000     1100000
+                           1536000         1140000     1140000 >;
         };
     };
 
@@ -590,6 +591,7 @@
 
     cpufreq-meson{
         compatible = "amlogic,cpufreq-meson";
+        syspll_fixed;
         status = "okay";
     };
 
