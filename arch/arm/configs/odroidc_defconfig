@@ -1078,7 +1078,7 @@ CONFIG_PINCTRL_AMLOGIC=y
 #
 # CONFIG_AMLOGIC_BOARD_HAS_PMU is not set
 # CONFIG_AML_PMU_ALGORITHM_SUPPORT is not set
-CONFIG_AML_DVFS=y
+# CONFIG_AML_DVFS is not set
 CONFIG_MESON_CS_DCDC_REGULATOR=y
 
 #
@@ -1135,18 +1135,6 @@ CONFIG_MMC_AML=y
 # CONFIG_AMLOGIC_SPI_NOR is not set
 
 #
-# Meson NAND Device Support(For NEXT GEN NAND DRIV)
-#
-# CONFIG_AML_NEXT_GEN_NAND is not set
-# CONFIG_AML_NFTL_NEW is not set
-
-#
-# Meson NAND Device Support
-#
-# CONFIG_AM_NAND is not set
-# CONFIG_AML_NEXT_NAND is not set
-
-#
 # Network devices
 #
 
@@ -1169,7 +1157,6 @@ CONFIG_AM_WIFI=y
 # CONFIG_AM_WIFI_SD_MMC is not set
 # CONFIG_DHD_USE_STATIC_BUF is not set
 CONFIG_AM_WIFI_USB=y
-# CONFIG_BCMDHD is not set
 CONFIG_RTL8188EU=m
 CONFIG_RTL8188EU_MP=m
 # CONFIG_RTL8192CU is not set
@@ -1448,10 +1435,6 @@ CONFIG_CRYPTO_DEVICE_DRIVER=y
 # MHL Support
 #
 # CONFIG_PANEL_IT6681 is not set
-
-#
-# Amlogic PMU battery algorithm Support
-#
 
 #
 # Amlogic touch algorithm Support
