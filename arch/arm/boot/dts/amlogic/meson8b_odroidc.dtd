@@ -1569,4 +1569,7 @@ void root_func(){
                 reset_delay = <100>;
         };
 
+    odroid_sysfs {
+        compatible = "odroid-sysfs";
+    };
 }; /* end of / */
