@@ -41,9 +41,15 @@ void meson_common_restart(char mode,const char *cmd)
 {
     u32 reboot_reason = MESON_NORMAL_BOOT;
     if (cmd) {
+#if defined(CONFIG_MACH_MESON8B_ODROIDC)
         if (strcmp(cmd, "poweroff") == 0)
             reboot_reason = LINUX_REBOOT_CMD_POWER_OFF;
-        else if (strcmp(cmd, "charging_reboot") == 0)
+        else if (strcmp(cmp, "fastboot") == 0)
+            reboot_reason = LINUX_REBOOT_CMD_RESTART2;
+        else if (strcmp(cmp, "recovery") == 0)
+            reboot_reason = LINUX_REBOOT_CMD_KEXEC;
+#else
+        if (strcmp(cmd, "charging_reboot") == 0)
             reboot_reason = MESON_CHARGING_REBOOT;
         else if (strcmp(cmd, "recovery") == 0 || strcmp(cmd, "factory_reset") == 0)
             reboot_reason = MESON_FACTORY_RESET_REBOOT;
@@ -61,6 +67,7 @@ void meson_common_restart(char mode,const char *cmd)
             reboot_reason = MESON_LOCK_REBOOT;
         else if (strcmp(cmd, "usb_burner_reboot") == 0)
             reboot_reason = MESON_USB_BURNER_REBOOT;
+#endif
 	}
     aml_write_reg32(P_AO_RTI_STATUS_REG1, reboot_reason);
     printk("reboot_reason(0x%x) = 0x%x\n", P_AO_RTI_STATUS_REG1, aml_read_reg32(P_AO_RTI_STATUS_REG1));
