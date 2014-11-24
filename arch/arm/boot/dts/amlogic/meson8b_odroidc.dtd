@@ -1455,4 +1455,15 @@ void root_func(){
     odroid_sysfs {
         compatible = "odroid-sysfs";
     };
+
+    leds {
+        compatible = "gpio-leds";
+        /* Blue LED */
+        hearbeat {
+            label = "blue:heartbeart";
+            gpios = "GPIOAO_13";
+            default-state = "off";
+            linux,default-trigger = "heartbeat";
+        };
+    };
 }; /* end of / */
