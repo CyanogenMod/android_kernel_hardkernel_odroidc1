@@ -44,9 +44,9 @@ void meson_common_restart(char mode,const char *cmd)
 #if defined(CONFIG_MACH_MESON8B_ODROIDC)
         if (strcmp(cmd, "poweroff") == 0)
             reboot_reason = LINUX_REBOOT_CMD_POWER_OFF;
-        else if (strcmp(cmp, "fastboot") == 0)
+        else if (strcmp(cmd, "fastboot") == 0)
             reboot_reason = LINUX_REBOOT_CMD_RESTART2;
-        else if (strcmp(cmp, "recovery") == 0)
+        else if (strcmp(cmd, "recovery") == 0)
             reboot_reason = LINUX_REBOOT_CMD_KEXEC;
 #else
         if (strcmp(cmd, "charging_reboot") == 0)
