@@ -39,8 +39,8 @@ static struct input_dev *input_dev;
 static int keycode[] = { KEY_POWER, };
 static int key_release_seconds = 0;
 
-static ssize_t set_poweroff_trigger(struct device *dev, struct
-                device_attribute *attr, const char *buf, size_t count)
+static ssize_t set_poweroff_trigger(struct class *class,
+                struct class_attribute *attr, const char *buf, size_t count)
 {
         unsigned int val;
 
@@ -64,17 +64,15 @@ static ssize_t set_poweroff_trigger(struct device *dev, struct
         return count;
 }
 
-
-static  DEVICE_ATTR(poweroff_trigger, S_IRWXUGO, NULL, set_poweroff_trigger);
-
-static struct attribute *odroid_sysfs_entries[] = {
-        &dev_attr_poweroff_trigger.attr,
-        NULL
+static struct class_attribute odroid_class_attrs[] = {
+        __ATTR(poweroff_trigger, 0222, NULL, set_poweroff_trigger),
+        __ATTR_NULL,
 };
 
-static struct attribute_group odroid_sysfs_attr_group = {
-        .name   = NULL,
-        .attrs  = odroid_sysfs_entries,
+static struct class odroid_class = {
+        .name = "odroid",
+        .owner = THIS_MODULE,
+        .class_attrs = odroid_class_attrs,
 };
 
 static enum hrtimer_restart input_timer_function(struct hrtimer *timer)
@@ -88,7 +86,7 @@ static enum hrtimer_restart input_timer_function(struct hrtimer *timer)
 
 static int odroid_sysfs_probe(struct platform_device *pdev)
 {
-        int error = -ENOMEM;
+        int error = 0;
 
 #if defined(SLEEP_DISABLE_FLAG)
 #if defined(CONFIG_HAS_WAKELOCK)
@@ -99,8 +97,10 @@ static int odroid_sysfs_probe(struct platform_device *pdev)
         // virtual key init (Power Off Key)
         //------------------------------------------------------------------------
         input_dev = input_allocate_device();
-        if (!input_dev)
+        if (!input_dev) {
+                error = -ENOMEM;
                 goto err_out;
+        }
 
         input_dev->name = "vt-input";
         input_dev->phys = "vt-input/input0";
@@ -116,18 +116,17 @@ static int odroid_sysfs_probe(struct platform_device *pdev)
         set_bit(KEY_POWER & KEY_MAX, input_dev->keybit);
 
         error = input_register_device(input_dev);
-        if (error)
+        if (error) {
+                input_free_device(input_dev);
                 goto err_out;
+        }
 
         printk("%s input driver registered!!\n", "Virtual-Key");
 
         hrtimer_init(&input_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
         input_timer.function = input_timer_function;
 
-        return sysfs_create_group(&pdev->dev.kobj, &odroid_sysfs_attr_group);
-
 err_out:
-        input_free_device(input_dev);
         return error;
 }
 
@@ -138,9 +137,6 @@ static  int odroid_sysfs_remove(struct platform_device *pdev)
         wake_unlock(&sleep_wake_lock);
 #endif
 #endif
-
-        sysfs_remove_group(&pdev->dev.kobj, &odroid_sysfs_attr_group);
-
         return 0;
 }
 
@@ -181,11 +177,15 @@ static struct platform_driver odroid_sysfs_driver = {
         .probe = odroid_sysfs_probe,
         .remove = odroid_sysfs_remove,
         .suspend = odroid_sysfs_suspend,
-        .resume	= odroid_sysfs_resume,
+        .resume = odroid_sysfs_resume,
 };
 
 static int __init odroid_sysfs_init(void)
 {
+        int error = class_register(&odroid_class);
+        if (0 > error)
+                return error;
+
         printk("--------------------------------------------------------\n");
 #if defined(SLEEP_DISABLE_FLAG)
 #if defined(CONFIG_HAS_WAKELOCK)
@@ -210,6 +210,7 @@ static void __exit odroid_sysfs_exit(void)
 #endif
 #endif
         platform_driver_unregister(&odroid_sysfs_driver);
+        class_unregister(&odroid_class);
 }
 
 module_init(odroid_sysfs_init);
