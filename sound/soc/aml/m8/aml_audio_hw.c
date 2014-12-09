@@ -214,7 +214,7 @@ void audio_set_aiubuf(u32 addr, u32 size, unsigned int channel)
 	WRITE_MPEG_REG(AIU_I2S_MISC,		0x0010 );	// Release hold and force audio data to left or right
 
 	if(channel == 8){
-		printk(" %s channel == 8\n",__FUNCTION__);
+		printk(KERN_DEBUG " %s channel == 8\n",__FUNCTION__);
 	WRITE_MPEG_REG(AIU_MEM_I2S_MASKS,		(24 << 16) |	// [31:16] IRQ block.
 								(0xff << 8) |	// [15: 8] chan_mem_mask. Each bit indicates which channels exist in memory
 								(0xff << 0));	// [ 7: 0] chan_rd_mask.  Each bit indicates which channels are READ from memory
@@ -360,13 +360,13 @@ static void spdifin_fifo1_set_buf(u32 addr, u32 size)
 }
 void audio_in_i2s_set_buf(u32 addr, u32 size,u32 i2s_mode, u32 i2s_sync)
 {
-	printk("i2sin_fifo0_set_buf \n");		
+	printk(KERN_DEBUG "i2sin_fifo0_set_buf \n");		
 	i2sin_fifo0_set_buf(addr,size,i2s_mode,i2s_sync);
 	audio_in_buf_ready = 1;
 }
 void audio_in_spdif_set_buf(u32 addr, u32 size)
 {
-	printk("spdifin_fifo1_set_buf \n");			
+	printk(KERN_DEBUG "spdifin_fifo1_set_buf \n");			
 	spdifin_fifo1_set_buf(addr,size);
 	
 }
@@ -383,7 +383,7 @@ reset_again:
             rd = READ_MPEG_REG(AUDIN_FIFO0_PTR);
             start = READ_MPEG_REG(AUDIN_FIFO0_START);
             if(rd != start){
-              printk("error %08x, %08x !!!!!!!!!!!!!!!!!!!!!!!!\n", rd, start);
+              printk(KERN_ERR "error %08x, %08x !!!!!!!!!!!!!!!!!!!!!!!!\n", rd, start);
               goto reset_again;
             }
 			WRITE_MPEG_REG_BITS(AUDIN_I2SIN_CTRL, 1, I2SIN_EN, 1);
@@ -405,7 +405,7 @@ reset_again:
             rd = READ_MPEG_REG(AUDIN_FIFO1_PTR);
             start = READ_MPEG_REG(AUDIN_FIFO1_START);
             if(rd != start){
-              printk("error %08x, %08x !!!!!!!!!!!!!!!!!!!!!!!!\n", rd, start);
+              printk(KERN_ERR "error %08x, %08x !!!!!!!!!!!!!!!!!!!!!!!!\n", rd, start);
               goto reset_again;
             }
 		WRITE_MPEG_REG(AUDIN_SPDIF_MODE, READ_MPEG_REG(AUDIN_SPDIF_MODE)| (1<<31));		
@@ -425,14 +425,14 @@ unsigned int audio_in_i2s_rd_ptr(void)
 {
 	unsigned int val;
 	val = READ_MPEG_REG(AUDIN_FIFO0_RDPTR);
-	printk("audio in i2s rd ptr: %x\n", val);
+	printk(KERN_DEBUG "audio in i2s rd ptr: %x\n", val);
 	return val;
 }
 unsigned int audio_in_spdif_rd_ptr(void)
 {
 	unsigned int val;
 	val = READ_MPEG_REG(AUDIN_FIFO1_RDPTR);
-	printk("audio in spdif rd ptr: %x\n", val);
+	printk(KERN_DEBUG "audio in spdif rd ptr: %x\n", val);
 	return val;
 }
 unsigned int audio_in_i2s_wr_ptr(void)
@@ -714,7 +714,7 @@ void audio_set_958_clk(unsigned freq, unsigned fs_config)
     int (*audio_clock_config)[2];
 
 	int index=0;
-    printk("audio_set_958_clk, freq=%d,\n",freq);
+    printk(KERN_DEBUG "audio_set_958_clk, freq=%d,\n",freq);
 	switch(freq)
 	{
 		case AUDIO_CLK_FREQ_192:
@@ -966,7 +966,7 @@ void audio_set_958_mode(unsigned mode, _aiu_958_raw_setting_t * set)
             WRITE_MPEG_REG_BITS(AIU_MEM_IEC958_CONTROL, 1, 3, 3); // endian
         }
 
-        printk("IEC958 RAW\n");
+        printk(KERN_DEBUG "IEC958 RAW\n");
     }else if(mode == AIU_958_MODE_PCM32){
         audio_hw_set_958_pcm24(set);
         if(ENABLE_IEC958){
@@ -975,7 +975,7 @@ void audio_set_958_mode(unsigned mode, _aiu_958_raw_setting_t * set)
             WRITE_MPEG_REG_BITS(AIU_MEM_IEC958_CONTROL, 0, 7, 1);  // 16bit
             WRITE_MPEG_REG_BITS(AIU_MEM_IEC958_CONTROL, 0, 3, 3); // endian
         }
-        printk("IEC958 PCM32 \n");
+        printk(KERN_DEBUG "IEC958 PCM32 \n");
     }else if (mode == AIU_958_MODE_PCM24) {
         audio_hw_set_958_pcm24(set);
         if (ENABLE_IEC958) {
@@ -985,7 +985,7 @@ void audio_set_958_mode(unsigned mode, _aiu_958_raw_setting_t * set)
             WRITE_MPEG_REG_BITS(AIU_MEM_IEC958_CONTROL, 0, 3, 3); // endian
 
         }
-        printk("IEC958 24bit\n");
+        printk(KERN_DEBUG "IEC958 24bit\n");
     } else if (mode == AIU_958_MODE_PCM16) {
         audio_hw_set_958_pcm24(set);
         if (ENABLE_IEC958) {
@@ -995,7 +995,7 @@ void audio_set_958_mode(unsigned mode, _aiu_958_raw_setting_t * set)
             WRITE_MPEG_REG_BITS(AIU_MEM_IEC958_CONTROL, 0, 3, 3); // endian
 
         }
-        printk("IEC958 16bit\n");
+        printk(KERN_DEBUG "IEC958 16bit\n");
     }
 
     audio_hw_958_reset(0, 1);
