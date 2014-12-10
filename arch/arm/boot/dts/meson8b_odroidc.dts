@@ -533,6 +533,26 @@
         status = "okay";
     };
 
+    spi@c1108d80 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        compatible = "amlogic,spicc";
+        dev_name = "spicc";
+        status = "okay";
+        reg = <0xc1108d80 0x28>;
+        pinctrl-names="default";
+        pinctrl-0=<&aml_spicc_pins>;
+        device_id = <0>;
+        num_chipselect = <2>;
+        cs_gpios = "GPIOX_20", "GPIOX_21";
+
+        spidev@0 {
+            spi-max-frequency = <2000000>;
+            compatible = "spidev";
+            reg = <0>;
+        };
+    };
+
     meson-remote{
         compatible = "amlogic,aml_remote";
         dev_name = "meson-remote";
@@ -880,6 +900,17 @@
             amlogic,setmask = <5 0xf>;
             amlogic,clrmask = <2 0x380000>;
             amlogic,pins = "BOOT_11", "BOOT_12", "BOOT_13", "BOOT_18";
+        };
+
+        aml_spicc_pins: aml_spicc_pins{
+            amlogic,setmask=<4 0x03c00000>;
+            amlogic,clrmask=<3 0x004003C0
+                            5 0x00000C00
+                            6 0x000F0000
+                            7 0x80000000
+                            8 0x00000003
+                            9 0x00080000>;
+            amlogic,pins = "GPIOX_8","GPIOX_9","GPIOX_10";
         };
 
         odroid_pwm0:odroid_pwm0{
