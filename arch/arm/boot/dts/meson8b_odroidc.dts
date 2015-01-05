@@ -545,30 +545,6 @@
         pinctrl-0 = <&remote_pins>;
     };
 
-    spi@cc000000{
-        compatible = "amlogic,apollo_spi_nor";
-        status = "ok";
-        reg = <0xcc000000 0x04000000>;
-        pinctrl-names = "default";
-        pinctrl-0 = <&aml_spi_nor_pins>;
-
-        nr-parts = <2>;
-        nr-part-0 = <&bootloader>;
-        nr-part-1 = <&ubootenv>;
-
-        bootloader:bootloader{
-            name = "bootloader";
-            offset = <0>;
-            size = <0x100000>;
-        };
-
-        ubootenv:ubootenv{
-             name = "ubootenv";
-             offset = <0x100000>;
-             size = <0x10000>;
-        };
-    };
-
     efuse{
         compatible = "amlogic,efuse";
         dev_name = "efuse";
