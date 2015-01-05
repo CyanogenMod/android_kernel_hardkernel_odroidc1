@@ -29,6 +29,7 @@
 #include <linux/gpio.h>
 #include <linux/io.h>
 #include <linux/hrtimer.h>
+#include <asm/setup.h>
 
 MODULE_AUTHOR("Hardkernel Co,.Ltd");
 MODULE_DESCRIPTION("SYSFS driver for ODROID hardware");
@@ -64,8 +65,33 @@ static ssize_t set_poweroff_trigger(struct class *class,
         return count;
 }
 
+static const char *product;
+static const char *serialno;
+static const char *mac_addr;
+
+static ssize_t show_product(struct class *class,
+                struct class_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%s\n", product);
+}
+
+static ssize_t show_serialno(struct class *class,
+                struct class_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%s\n", serialno);
+}
+
+static ssize_t show_mac_addr(struct class *class,
+                struct class_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%s\n", mac_addr);
+}
+
 static struct class_attribute odroid_class_attrs[] = {
         __ATTR(poweroff_trigger, 0222, NULL, set_poweroff_trigger),
+        __ATTR(product, 0444, show_product, NULL),
+        __ATTR(serialno, 0444, show_serialno, NULL),
+        __ATTR(mac_addr, 0444, show_mac_addr, NULL),
         __ATTR_NULL,
 };
 
@@ -87,6 +113,9 @@ static enum hrtimer_restart input_timer_function(struct hrtimer *timer)
 static int odroid_sysfs_probe(struct platform_device *pdev)
 {
         int error = 0;
+#ifdef CONFIG_USE_OF
+    struct device_node *node;
+#endif
 
 #if defined(SLEEP_DISABLE_FLAG)
 #if defined(CONFIG_HAS_WAKELOCK)
@@ -125,6 +154,15 @@ static int odroid_sysfs_probe(struct platform_device *pdev)
 
         hrtimer_init(&input_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
         input_timer.function = input_timer_function;
+
+#ifdef CONFIG_USE_OF
+	if (pdev->dev.of_node) {
+		node = pdev->dev.of_node;
+		of_property_read_string(node, "product", &product);
+		of_property_read_string(node, "serialno", &serialno);
+		of_property_read_string(node, "mac_addr", &mac_addr);
+	}
+#endif
 
 err_out:
         return error;
