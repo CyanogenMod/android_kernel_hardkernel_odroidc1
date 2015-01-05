@@ -1086,7 +1086,7 @@ CONFIG_RTL8192DU=m
 #
 # Audio Interface
 #
-# CONFIG_AMAUDIO is not set
+CONFIG_AMAUDIO=y
 
 #
 # Amlogic Audio Interface V2
