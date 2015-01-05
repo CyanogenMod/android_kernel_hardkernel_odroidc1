@@ -918,4 +918,16 @@
 #define USB_VENDOR_ID_SIS	0x0457
 #define USB_DEVICE_ID_SIS_TS	0x1013
 
+/* Elitegroup Computer Systems */
+#define USB_VENDOR_ID_ELITEGROUP    0x03fc
+#define USB_DEVICE_ID_ELITEGROUP_TOUCH  0x05d8
+
+/* Nexio Co., Ltd */
+#define USB_VENDOR_ID_NEXIO     0x1870
+#define USB_DEVICE_ID_NEXIO_42TOUCH     0x0100
+#define USB_DEVICE_ID_NEXIO_TOUCH       0x0119
+
+/* Focaltech System FT5926 Multitouch(Hardkernel 9" Touch Screen) */
+#define USB_VENDOR_ID_FOCALTECH 0x2808
+#define USB_DEVICE_ID_FOCALTECH_TOUCH   0x81C9
 #endif
