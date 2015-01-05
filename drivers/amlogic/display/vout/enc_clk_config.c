@@ -5,6 +5,8 @@
 #include <mach/am_regs.h>
 #include <mach/clock.h>
 #include <linux/amlogic/vout/enc_clk_config.h>
+#include <linux/mutex.h>
+
 
 #define check_div() \
     if(div == -1)\
@@ -696,6 +698,7 @@ static enc_clk_val_t setting_enc_clk_val[] = {
     {VMODE_XGA, 1085, 1, 1, VIU_ENCP, 5, 1, 1, 1, -1, -1, -1,  1,  1},
 #endif
 };
+static DEFINE_MUTEX(setclk_mutex);
 
 void set_vmode_clk(vmode_t mode)
 {
@@ -703,6 +706,7 @@ void set_vmode_clk(vmode_t mode)
 
     int i = 0;
     int j = 0; 
+    mutex_lock(&setclk_mutex);
 	if(IS_MESON_M8M2_CPU){
 		p_enc=&setting_enc_clk_val_m8m2[0];
 		i = sizeof(setting_enc_clk_val_m8m2) / sizeof(enc_clk_val_t);
@@ -720,6 +724,8 @@ void set_vmode_clk(vmode_t mode)
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
     set_hpll_lvds_od(p_enc[j].hpll_lvds_od);
 #endif
+    mutex_unlock(&setclk_mutex);
+    
     set_hpll_hdmi_od(p_enc[j].hpll_hdmi_od);
 #if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8B
     if((mode == VMODE_800X600P_60HZ) || (mode == VMODE_1024X600P_60HZ) || (mode == VMODE_1024X768P_60HZ))
