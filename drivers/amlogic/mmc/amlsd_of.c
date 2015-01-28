@@ -52,7 +52,20 @@ static int __init setup_disableuhs(char *line)
         return 0;
 }
 early_param("disableuhs", setup_disableuhs);
+
+/* Force to set "MMC_CAP_NONREMOVABLE" to prevent MMC card detection
+ * by MicroSD card socket.
+ */
+static int mmc_nonremovable = 0;
+
+static int __init setup_mmc_nonremovable(char *line)
+{
+        mmc_nonremovable = 1;
+        return 0;
+}
+early_param("mmc_nonremovable", setup_mmc_nonremovable);
 #endif
+
 
 static int amlsd_get_host_caps(struct device_node* of_node,
                 struct amlsd_platform* pdata)
@@ -73,6 +86,10 @@ static int amlsd_get_host_caps(struct device_node* of_node,
             caps &= ~(MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 |
                             MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104 |
                             MMC_CAP_UHS_DDR50);
+    }
+
+    if (mmc_nonremovable) {
+        caps |= MMC_CAP_NONREMOVABLE;
     }
 #endif
 
