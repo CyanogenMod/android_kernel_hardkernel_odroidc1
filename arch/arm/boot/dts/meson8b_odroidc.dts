@@ -307,7 +307,6 @@
                    "MMC_CAP_NONREMOVABLE",
                    "MMC_CAP_ERASE",
                    "MMC_CAP_HW_RESET";
-            caps2 = "MMC_CAP2_HS200_1_8V_SDR";
             caps2 = "MMC_CAP2_HS200_1_8V_SDR", "MMC_CAP2_BOOTPART_NOACC";
             f_min = <300000>;
             f_max = <150000000>;
