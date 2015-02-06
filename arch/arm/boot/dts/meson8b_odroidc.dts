@@ -612,6 +612,8 @@
         ao_uart_pins:ao_uart{
             amlogic,setmask = <10 0x1800>;
             amlogic,pins="GPIOAO_0", "GPIOAO_1";
+            amlogic,pullup=<1>;
+            amlogic,pullupen=<1>;
         };
 
         b_uart_pins:b_uart{
