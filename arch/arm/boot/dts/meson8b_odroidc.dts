@@ -95,6 +95,7 @@
         reg = <0xc4301000 0x1000
                0xc4300100 0x0100>;
         interrupt-controller;
+        gic_fiq_enable;
         #interrupt-cells = <3>;
         #address-cells = <0>;
     };
@@ -425,6 +426,7 @@
             port-config = <0>;
             port-dma = <0>;
             port-id-mode = <1>;
+            fiq_use = <1>;
             gpio-hub-rst = "GPIOAO_4";
             status = "okay";
         };
