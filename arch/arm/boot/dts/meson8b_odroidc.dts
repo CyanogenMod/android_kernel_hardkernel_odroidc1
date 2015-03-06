@@ -570,10 +570,10 @@
         pwr-ctrl = <&pwr_ctrl>;
 
         vend_data: vend_data{
-               vendor_name = "Amlogic";
+               vendor_name = "Hardkernel";
                vendor_id = <0x000000>;
-               product_desc = "M8 MBox SKTv1";
-               cec_osd_string = "MBox";
+               product_desc = "ODROID-C1";
+               cec_osd_string = "ODROID";
                cec_config = <0x00000f>;
                ao_cec = <0x000001>;
         };
