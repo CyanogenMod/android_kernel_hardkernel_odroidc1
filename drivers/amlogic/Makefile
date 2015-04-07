@@ -90,6 +90,12 @@ obj-$(CONFIG_AM_DVB) += dvb_tv/
 obj-$(CONFIG_AM_SMARTCARD) += smartcard/
 
 obj-$(CONFIG_AM_WIFI) += wifi/
+ifneq ($(wildcard $(srctree)/../hardware/wifi),)
+	obj-$(CONFIG_RTL8192CU) += ../../../hardware/wifi/realtek/drivers/8192cu/rtl8xxx_CU/
+endif
+ifneq ($(wildcard $(srctree)/../hardware/wifi),)
+	obj-$(CONFIG_RTL8192CU) += ../../../hardware/wifi/realtek/drivers/8192cu/rtl8xxx_CU/
+endif
 obj-y += bluetooth/
 obj-$(CONFIG_MESON_NFC) += nfc/
 
