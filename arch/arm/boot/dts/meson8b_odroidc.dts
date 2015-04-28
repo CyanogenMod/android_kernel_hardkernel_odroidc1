@@ -328,6 +328,22 @@
         pinctrl-0 = <&a_i2c_master>;
         use_pio = <0>;
         master_i2c_speed = <100000>;
+
+        bmp085-i2c@77 {
+            compatible = "bosh,bmp085";
+            reg = <0x77>;
+        };
+
+        si702@40 {
+            compatible = "silab,si702x";
+            reg = <0x40>;
+        };
+
+        si1132@60 {
+            compatible = "silab,si1132";
+            reg = <0x60>;
+        };
+
     };
 
     i2c@c11087c0{
